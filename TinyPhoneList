@@ -1,0 +1,346 @@
+import javax.swing.*;
+import java.awt.*;
+public class tinyPhoneList 
+{
+	public static void main(String[] args) 
+	{
+		tinyPhoneListFrame frame = new tinyPhoneListFrame();
+		frame.setTitle("My Phone List...");
+		frame.setSize(500,200);
+		frame.setVisible(true);
+		frame.setResizable(false);
+	}
+}
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+public class tinyPhoneListFrame extends JFrame implements ActionListener {
+
+	/**
+	 * to avoid the compilation errors, set the version ID to 1
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** instance variables */	
+	// ArrayList containing comma delimited field values
+	private ArrayList<String> strList = new ArrayList<>();   
+	// (global) variable to keep track of the current arraylist record number index
+	private int recno = -1;    
+	// (global) variable to keep track of the last arraylist record number index
+	private int lastrecno = -1;  
+	// (global) variable to flag new record (true) vs. edited record (false)
+	private boolean isnew = false;   
+	    
+	/** instance variables - visual components go here ... */
+	// the text fields to hold the input
+	
+	// the text field to input the last name
+	private JTextField textFieldLastName;
+	// the text field to input the first name
+	private JTextField textFieldFirstName;
+	// the text fields to input the phone number
+	private JTextField textFieldPhone;
+	
+	// the buttons
+	private JButton buttonPrevious;
+	private JButton buttonNext;
+	private JButton buttonNew;
+	private JButton buttonSave;
+	private JButton buttonDelete;
+	
+	// the labels
+	private JLabel labelFirstName;
+	private JLabel labelLastName;
+	private JLabel labelPhone;
+	
+	
+    /**	
+     * Constructor for objects of class tinyPhoneListFrame	
+     */	
+    public tinyPhoneListFrame()	
+    {	
+	        /** start arraylist */
+	        strList.add(",,");
+	        recno = 0;
+	        lastrecno = 0;
+	        
+	        textFieldFirstName = new JTextField();
+	        textFieldLastName = new JTextField();
+	        textFieldPhone = new JTextField();
+	        
+	        buttonPrevious = new JButton("Previous");
+	        buttonNew = new JButton("New");
+	        buttonNext = new JButton("Next");
+	        buttonSave = new JButton("Save");
+	        buttonDelete = new JButton("Delete");
+	        
+	        labelFirstName = new JLabel("        Last");
+	        labelFirstName.setHorizontalAlignment(SwingConstants.RIGHT);
+	        labelLastName = new JLabel("        First");
+	        labelLastName.setHorizontalAlignment(SwingConstants.RIGHT);
+	        labelPhone = new JLabel("        Phone");
+	        labelPhone.setHorizontalAlignment(SwingConstants.RIGHT);
+	
+	        /** Get the content pane of the frame and set Layout type */
+	        // getContentPane().setLayout(new BorderLayout());
+	        setLayout(new BorderLayout());
+	
+	        /** pnlLabels Layout and Add Components */
+	        JPanel pnlLabels = new JPanel();
+	        pnlLabels.setLayout(new GridLayout(3,1));
+	        pnlLabels.add(labelFirstName);
+	        pnlLabels.add(labelLastName);
+	        pnlLabels.add(labelPhone);
+	
+	        /** pnlFields Layout and Add Components */
+	        JPanel pnlFields = new JPanel();
+	        pnlFields.setLayout(new BoxLayout(pnlFields, BoxLayout.Y_AXIS));
+	        pnlFields.add(textFieldFirstName);
+	        pnlFields.add(textFieldLastName);
+	        pnlFields.add(textFieldPhone);
+	        pnlFields.setPreferredSize(new Dimension(300, 300));
+	
+	        /** pnlData Layout and Add Components */
+	        
+	        // pnlButtons Layout and Add Components
+	        JPanel pnlButtons = new JPanel();
+	        pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
+	        pnlButtons.add(buttonPrevious);
+	        pnlButtons.add(buttonNew);
+	        pnlButtons.add(buttonSave);
+	        pnlButtons.add(buttonDelete);
+	        pnlButtons.add(buttonNext);
+	
+	        // add panels to container
+	        // getContentPane().add(pnlLabels,BorderLayout.EAST);
+	        // getContentPane().add(pnlFields,BorderLayout.WEST);
+	        // getContentPane().add(pnlButtons,BorderLayout.SOUTH);
+	        add(pnlLabels,BorderLayout.WEST);
+	        add(pnlButtons,BorderLayout.SOUTH);
+	        add(pnlFields,BorderLayout.EAST);
+	        
+	
+	        // add event handlers to buttons
+	        buttonPrevious.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jbtnPrevious_Click();
+				}
+			});
+	        buttonNew.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jbtnNew_Click();
+				}
+			});
+	        buttonDelete.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jbtnDelete_Click();
+				}
+			});
+	        buttonNext.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jbtnNext_Click();
+				}
+			});
+	        buttonSave.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					jbtnSave_Click();
+				}
+			});
+	    }
+	
+    /** Handler for an Action event (Component Clicked) */	
+    public void actionPerformed(ActionEvent e) {	
+	        /** Run Button Method for the button selected */
+	        // if (e.getSource() == jbtnNew) jbtnNew_Click();
+	         // repeat for each component pointing to a separate user method
+    			if( e.getSource() == buttonPrevious )
+    				jbtnPrevious_Click();
+    			else if( e.getSource() == buttonNew )
+    				jbtnNew_Click();
+    			else if( e.getSource() == buttonNext )
+    				jbtnNext_Click();
+    			else if( e.getSource() == buttonDelete )
+    				jbtnDelete_Click();
+    			else if( e.getSource() == buttonSave )
+    				jbtnSave_Click();
+	    }
+	
+    private void jbtnPrevious_Click() {	
+	          // temporary code to ensure all forward handler references work before coding
+	         JOptionPane.showMessageDialog(null, "Previous" ,"Button Pressed", 
+	                JOptionPane.INFORMATION_MESSAGE);
+	         System.out.println("Previous");
+    			if( recno > 0 )
+    			{
+    				// run the a method that saves values in the arraylist string to the fields passing the boolean isnew variable as an argument 
+    				saveTextFields(isnew);
+    				// decrement the arraylist current record number index
+    				recno--;
+    				// run a method to maintains the recno pointer and lastrecno reference
+    				resetpntr();
+    				// run the method that fills the text fields with parsed values from the current string (sinew arg = false)
+    				fillTextFields(false);
+    				// equate isnew to false
+    				isnew = false;
+    			}
+    			// if the current record index is > 0
+    			else
+    				// if not, output a warning message
+    				JOptionPane.showMessageDialog(null, "Error" ,"No Previous Record", JOptionPane.ERROR_MESSAGE);
+	    }
+	
+    private void jbtnNew_Click() {	
+	          // temporary code to ensure all forward handler references work before coding
+	         // JOptionPane.showMessageDialog(null, "New" ,"Button Pressed", 
+	                // JOptionPane.INFORMATION_MESSAGE);
+	
+	         // equate isnew variable to true
+    			isnew = true;
+	         // run the method that fills the text fields with blanks (with isnew passed as true)
+    			fillTextFields(isnew);
+	    }
+	
+	
+    private void jbtnSave_Click() {	
+	          // temporary code to ensure all forward handler references work before coding
+	         // JOptionPane.showMessageDialog(null, "Save" ,"Button Pressed", 
+	                // JOptionPane.INFORMATION_MESSAGE);
+	
+    			saveTextFields(isnew);
+	         // run the a method that saves values in the arraylist string to the fields passing the boolean isnew variable as an argument 
+	        isnew = false; 
+    			// equate isnew variable to false
+	        resetpntr();
+	         // run a method to maintains the recno pointer and lastrecno reference   
+	    }
+	
+    private void jbtnDelete_Click() {	
+	          // temporary code to ensure all forward handler references work before coding
+	         /* JOptionPane.showMessageDialog(null, "Delete" ,"Button Pressed", 
+	                JOptionPane.INFORMATION_MESSAGE);  */
+    	 		// if the last record index is => 0 
+    			if( lastrecno >= 0 )
+    			{
+    				// remove the current arraylist item
+    				strList.remove(recno);
+    				// run a method to maintains the recno pointer and lastrecno reference
+    				resetpntr();
+    				// if the arraylist contains records
+    				if( strList.size() > 0 )
+    					// run the method that fills the text fields with the new current arraylist item (with isnew passed as false)			             else fillTextFields(true);
+    					fillTextFields(false);
+    			}
+    			else
+    				// otherwise, Show an error message ... NO RECORDS
+    				JOptionPane.showMessageDialog(null, "Error" ,"No Previous Record", JOptionPane.ERROR_MESSAGE);
+	            
+	    }
+	
+    private void jbtnNext_Click() {	
+	          // temporary code to ensure all forward handler references work before coding
+	        // JOptionPane.showMessageDialog(null, "Next" ,"Button Pressed", 
+	                // JOptionPane.INFORMATION_MESSAGE);
+	
+	        // same as jbtnPrevious_Click() except arraylist index is incremented
+	    		if( recno > 0 && recno < lastrecno )
+			{
+				// run the a method that saves values in the arraylist string to the fields passing the boolean isnew variable as an argument 
+				saveTextFields(isnew);
+				// increment the arraylist current record number index
+				recno++;
+				// run a method to maintains the recno pointer and lastrecno reference
+				resetpntr();
+				// run the method that fills the text fields with parsed values from the current string (sinew arg = false)
+				fillTextFields(false);
+				// equate isnew to false
+				isnew = false;
+			}
+			// if the current record index is > 0
+			else
+				// if not, output a warning message
+				JOptionPane.showMessageDialog(null, "Error" ,"No Next Record", JOptionPane.ERROR_MESSAGE);
+    }
+	
+    /**	
+     * user field hanling methods	
+     */	
+	
+    private void fillTextFields(boolean isblank) {
+	        // if isblank is true
+	            // Blank out data fields by equating each to an empty string
+    			if( isblank )
+    			{
+    				// set all the text fields to true
+    				textFieldFirstName.setText("");
+    				textFieldLastName.setText("");
+    				textFieldPhone.setText("");
+    			}
+	        // otherwise
+    			else
+    			{
+    				String current = strList.get(recno);
+    				String items[] = current.split(",");
+    				textFieldFirstName.setText(items[0]);
+    				textFieldLastName.setText(items[1]);
+    				textFieldPhone.setText(items[2]);
+    			}
+	            // plsce the current comma delited string item in a string variable
+	            // declare a string array and equate to the return value of the above string passed to the parseString() method (given)
+	    }
+	
+    private void saveTextFields(boolean isnew)  {	
+    			// create a string that contains the concatenated, comma delimited values of the text field components	
+    			String record = textFieldFirstName.getText() + "," + 
+    						textFieldLastName.getText() + "," + 
+    						textFieldPhone.getText();
+     	
+	        
+	        // if this is a new record (ie isnew is true)
+    			if( isnew )
+    			{
+    				// run a method to maintains the recno pointer and lastrecno reference
+    				resetpntr();
+    				// append the concatenated string to the arraylist as a new record
+    				strList.add(record);
+    	            // adjust the (global) lastrecord number varable
+    				lastrecno = strList.size() - 1;
+    	            // make the current arraylist record index the same as the last record number variable
+    				recno = lastrecno;
+    	            // run a method to maintains the recno pointer and lastrecno reference 
+    				resetpntr();
+    			}
+    			else
+	        // otherwise
+	            // equate the current arraylist item to the concatenated string
+    				strList.set(recno, record);
+	    }
+	
+    private void resetpntr() {
+	         // equate the (global) lastrecord number variable to 1 less than the arraylist size
+    			 lastrecno = strList.size() - 1;
+	         // if the current record number >= the lastrecno
+    			 if( recno >= lastrecno )
+    				 // equate the current record number to the lastrecno
+    				 recno = lastrecno;
+	         
+	    }
+
+}
